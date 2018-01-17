@@ -8,6 +8,7 @@ import time
 
 parole = requests.get('https://raw.githubusercontent.com/dominictarr/random-name/master/first-names.txt').text.split('\r\n')
 proxy = []
+comment = raw_input("comment: ")
 
 def safe_print(content):
 	print("{0}".format(content))
@@ -27,6 +28,9 @@ def check(data, user, proxy):
 
 def follow(data, user, proxy):
 	return requests.post('https://www.instagram.com/web/friendships/'+user+'/follow/', proxies=proxy, cookies=data.cookies, headers={'referer':'https://www.instagram.com', 'origin':'https://www.instagram.com/', 'x-csrftoken':data.cookies['csrftoken'], 'x-instagram-ajax': '1', 'x-requested-with': 'XMLHttpRequest', 'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0_1 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A402 Safari/604.1'}).status_code
+
+def comment(data, user, proxy):
+	return requests.post('https://www.instagram.com/web/comments/'+user+'/add/', proxies=proxy, cookies=data.cookies, headers={'referer':'https://www.instagram.com', 'origin':'https://www.instagram.com/', 'x-csrftoken':data.cookies['csrftoken'], 'x-instagram-ajax': '1', 'x-requested-with': 'XMLHttpRequest', 'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0_1 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A402 Safari/604.1'}, data={'comment_text': comment}).status_code
 
 def like(data, user, proxy):
 	return requests.post('https://www.instagram.com/web/likes/'+user+'/like/', proxies=proxy, cookies=data.cookies, headers={'referer':'https://www.instagram.com', 'origin':'https://www.instagram.com/', 'x-csrftoken':data.cookies['csrftoken'], 'x-instagram-ajax': '1', 'x-requested-with': 'XMLHttpRequest', 'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0_1 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A402 Safari/604.1'}).status_code
@@ -48,6 +52,8 @@ def job(uid, mode):
 			a = follow(registerx, uid, pxyd)
 		elif mode == 'l':
 			a = like(registerx, uid, pxyd)
+		elif mode == 'c':
+			a = comment(registerx, uid, pxyd, cm)
 		b = ('ACCEPTED' if a==200 else 'DECLINED')
 		safe_print('Followed by @' + user + ' (' + b + ')')
 	else:
@@ -81,6 +87,11 @@ if __name__ == '__main__':
 			fff = requests.get('https://www.instagram.com/p/' + usr).text
 			uid = fff.split('instagram://media?id=')[1].split('"')[0]
 			print('# Botting likes on ' + usr + ' (' + uid + ') with '+str(threads)+' threads and ' + str(len(proxy)) + ' proxies'+'\n'+'-'*50)
+		elif mode == 'c':
+			fff = requests.get('https://www.instagram.com/p/' + usr).text
+			uid = fff.split('instagram://media?id=')[1].split('"')[0]
+			cm = input("comment: ")
+			print('# Botting comments on ' + usr + ' (' + uid + ') with '+str(threads)+' threads and ' + str(len(proxy)) + ' proxies'+'\n'+'-'*50)
 		else:
 			print('# What? Modes: l (like), f (follow)')
 			exit(1)
