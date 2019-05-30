@@ -182,9 +182,12 @@ def lFollow(acc, i):
 
 def followThread(args):
 	if args.user:
-		i = Instaboom(proxy)
 		if not args.acclist:
 			while True:
+				if proxy != None:
+					i = Instaboom(proxy())
+				elif proxy == None:
+					i = Instaboom(proxy)
 				data = i.randomInfo()
 				print('[***] Registering %s (%s)...' % (data['username'], data['nc']))
 				a = i.register(data['email'], data['username'], data['password'], data['nc'])
@@ -196,6 +199,10 @@ def followThread(args):
 		else:
 			accs = open(args.acclist, 'r').read().splitlines()
 			for acc in accs:
+				if proxy != None:
+					i = Instaboom(proxy())
+				elif proxy == None:
+					i = Instaboom(proxy)
 				threading.Thread(target=lFollow, args=(acc, i,),).start()
 				time.sleep(0.25)
 	else:
@@ -220,9 +227,12 @@ def lLike(acc, i):
 
 def likeThread(args):
 	if args.post:
-		i = Instaboom(proxy)
 		if not args.acclist:
 			while True:
+				if proxy != None:
+					i = Instaboom(proxy())
+				elif proxy == None:
+					i = Instaboom(proxy)
 				data = i.randomInfo()
 				print('[***] Registering %s (%s)...' % (data['username'], data['nc']))
 				a = i.register(data['email'], data['username'], data['password'], data['nc'])
@@ -234,6 +244,10 @@ def likeThread(args):
 		else:
 			accs = open(args.acclist, 'r').read().splitlines()
 			for acc in accs:
+				if proxy != None:
+					i = Instaboom(proxy())
+				elif proxy == None:
+					i = Instaboom(proxy)
 				threading.Thread(target=lLike, args=(acc, i,),).start()
 				time.sleep(0.25)
 	else:
@@ -265,7 +279,7 @@ if __name__ == '__main__':
 	
 	try:
 		if args.proxies:
-			proxy = random.choice(open(args.proxies, 'r').read().split('\n'))
+			proxy = lambda : random.choice(open(args.proxies, 'r').read().split('\n'))
 		else:
 			proxy = None
 		
